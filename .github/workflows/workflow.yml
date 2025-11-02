@@ -3,10 +3,6 @@ on:
   push:
     paths:
       - "**.md"
-
-permissions:
-  contents: write 
-
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -15,6 +11,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+          token: ${{ secrets.GH_TOKEN }}
       - name: Get List of Not Filled Markdown Files
         id: getfile
         run: |-
@@ -32,22 +29,13 @@ jobs:
           language_id: 17
       - name: remove not_filled_files.txt
         run: rm not_filled_files.txt
-      
-      - name: Skip if triggered by bot
-        if: ${{ github.actor == 'github-actions[bot]' }}
-        run: echo "Triggered by bot; skipping commit/push." && exit 0
-      
       - name: Commit and push changes
         run: >-
           git config --local user.email
           "github-actions[bot]@users.noreply.github.com"
-
           git config --local user.name "github-actions[bot]"
-
           git add .
-
           git status
-
           if [[ -n "$(git status --porcelain)" ]]; then
           	git commit -m "Update performance details"
           	git push
