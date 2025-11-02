@@ -3,6 +3,10 @@ on:
   push:
     paths:
       - "**.md"
+
+permissions:
+  contents: write 
+
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -28,6 +32,11 @@ jobs:
           language_id: 17
       - name: remove not_filled_files.txt
         run: rm not_filled_files.txt
+      
+      - name: Skip if triggered by bot
+        if: ${{ github.actor == 'github-actions[bot]' }}
+        run: echo "Triggered by bot; skipping commit/push." && exit 0
+      
       - name: Commit and push changes
         run: >-
           git config --local user.email
