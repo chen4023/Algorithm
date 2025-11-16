@@ -7,13 +7,13 @@ let result = [];
 
 function backtrack(depth) {
   if (depth === M) {
-    result.push(path.json(' '));
+    result.push(path.join(' '));
     return;
   }
 
   for (let i = 1; i <= N; i++) {
-    if (!visted[i]) {
-      vistied[i] = true;
+    if (!visited[i]) {
+      visited[i] = true;
       path.push(i);
       backtrack(depth + 1);
       path.pop();
